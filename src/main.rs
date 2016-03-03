@@ -3,7 +3,7 @@ extern crate argparse;
 mod epd;
 mod perft;
 
-use epd::Epd;
+use epd::EpdReader;
 use std::fs::File;
 use std::io::Read;
 use std::process::exit;
@@ -23,7 +23,7 @@ fn main() {
     if perft_file_path != "" {
         println!("{}", perft_file_path);
         let mut file = File::open(perft_file_path).unwrap();
-        let mut perft_file = Epd::new(&mut file).unwrap();
+        let mut perft_file = EpdReader::new(&mut file);
         let res = perft::test(&perft_file);
 
         match res {

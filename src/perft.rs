@@ -1,5 +1,5 @@
-use epd::Epd;
+use epd::EpdReader;
 
-pub fn test(epd: &Epd) -> Result<(), String> {
+pub fn test(epd: &EpdReader) -> Result<(), String> {
     unimplemented!();
 }
