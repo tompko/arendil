@@ -1,5 +1,12 @@
 extern crate argparse;
 
+mod epd;
+mod perft;
+
+use epd::Epd;
+use std::fs::File;
+use std::io::Read;
+use std::process::exit;
 use argparse::{ArgumentParser, Store};
 
 fn main() {
@@ -15,5 +22,20 @@ fn main() {
 
     if perft_file_path != "" {
         println!("{}", perft_file_path);
+        let mut file = File::open(perft_file_path).unwrap();
+        let mut perft_file = Epd::new(&mut file).unwrap();
+        let res = perft::test(&perft_file);
+
+        match res {
+            Ok(_) => {
+                println!("Perft pass");
+                return;
+            },
+            Err(_) => {
+
+                println!("Perft fail");
+                exit(-1);
+            }
+        }
     }
 }
