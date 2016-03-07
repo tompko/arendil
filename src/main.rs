@@ -1,30 +1,33 @@
-extern crate argparse;
+extern crate clap;
 
 mod epd;
 mod perft;
 
 use epd::EpdReader;
 use std::fs::File;
-use std::io::Read;
 use std::process::exit;
-use argparse::{ArgumentParser, Store};
+use clap::{Arg, App};
 
 fn main() {
-    let mut perft_file_path = "".to_string();
-    {
-        let mut ap = ArgumentParser::new();
-        ap.set_description("Arendil chess engine");
-        ap.refer(&mut perft_file_path)
-            .add_option(&["-p", "--perft"], Store,
-            "Path to perft file");
-        ap.parse_args_or_exit();
-    }
+    let matches = App::new("Arendil")
+        .version(env!("CARGO_PKG_VERSION"))
+        .author("Chris T <tompko@gmail.com>")
+        .about("A chess engine in Rust")
+        .arg(Arg::with_name("perft")
+             .short("p")
+             .long("perft")
+             .value_name("FILE")
+             .help("Runs a perft test with the file")
+             .takes_value(true))
+        .get_matches();
 
-    if perft_file_path != "" {
-        println!("{}", perft_file_path);
-        let mut file = File::open(perft_file_path).unwrap();
+    let perft = matches.value_of("perft");
+    if perft.is_some() {
+        let perft = perft.unwrap();
+        println!("{}", perft);
+        let mut file = File::open(perft).unwrap();
         let mut perft_file = EpdReader::new(&mut file);
-        let res = perft::test(&perft_file);
+        let res = perft::test(&mut perft_file);
 
         match res {
             Ok(_) => {

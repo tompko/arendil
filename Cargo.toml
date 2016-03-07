@@ -4,4 +4,4 @@ version = "0.1.0"
 authors = ["Chris Tompkinson <tompko@gmail.com>"]
 
 [dependencies]
-argparse = "*"
+clap = "2"
